@@ -1,7 +1,12 @@
 const Genre = require('../models/genre');
 
-exports.genre_list = (req, res) => {
-    res.send('NOT IMPLEMENTED: genre list');
+exports.genre_list = (req, res, next) => {
+    Genre.find()
+    .sort({ name:1 })
+    .exec(function(err, list_genre) {
+        if (err) { return next(err); }
+        res.render('genre_list', { title: 'Genre List', genre_list: list_genre});
+    });
 };
 
 exports.genre_detail = (req, res) => {

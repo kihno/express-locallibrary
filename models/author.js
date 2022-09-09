@@ -31,11 +31,10 @@ AuthorSchema
 
 //Virtual for author's URL
 AuthorSchema
-    .virtual('url')
-    .get(function() {
-        return `/catalog/author/${this._id}`;
-    }
-);
+.virtual('url')
+.get(function() {
+    return `/catalog/author/${this._id}`;
+});
 
 //Virtual fo author's birth date
 AuthorSchema
