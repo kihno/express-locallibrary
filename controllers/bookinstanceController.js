@@ -1,4 +1,4 @@
-const { body, validtationResult } = require('express-validator');
+const { body, validationResult } = require('express-validator');
 const { render } = require('pug');
 
 const Book = require('../models/book');
@@ -56,7 +56,7 @@ exports.bookinstance_create_post = [
     .toDate(),
 
     (req, res, next) => {
-        const errors = validtationResult(req);
+        const errors = validationResult(req);
 
         const bookinstance = new BookInstance({
             book: req.body.book,
@@ -82,12 +82,25 @@ exports.bookinstance_create_post = [
     },
 ];
 
-exports.bookinstance_delete_get = (req, res) => {
-    res.send('NOT IMPLMENTED: bookinstance delete GET');
+exports.bookinstance_delete_get = (req, res, next) => {
+    BookInstance.findById(req.params.id)
+    .exec((err, bookinstance) => {
+        if (err) { return next(err); }
+
+        if (bookinstance == null) {
+            res.redirect('/catalog/books');
+        }
+
+        res.render('bookinstance_delete', { title: 'Delete Book Instance', bookinstance});
+    });
 };
 
-exports.bookinstance_delete_post = (req, res) => {
-    res.send('NOT IMPLEMENTED: bookinstance delete POST');
+exports.bookinstance_delete_post = (req, res, next) => {
+    BookInstance.findByIdAndRemove(req.body.bookinstanceid, (err) => {
+        if (err) { return next(err) }
+
+        res.redirect('/catalog/bookinstances');
+    });
 };
 
 exports.bookinstance_update_get = (req, res) => {
