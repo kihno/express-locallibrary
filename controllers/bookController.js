@@ -238,7 +238,7 @@ exports.book_update_get = (req, res) => {
 
             if (results.book == null) {
                 const err = new Error('Book not found');
-                err.stats = 404;
+                err.status = 404;
                 return next(err);
             }
 
