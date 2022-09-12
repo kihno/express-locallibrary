@@ -169,11 +169,52 @@ exports.book_create_post = [
 ];
 
 exports.book_delete_get = (req, res) => {
-    res.send('NOT IMPLMENTED: book delete GET');
+    async.parallel(
+        {
+            book(callback) {
+                Book.findById(req.params.id).exec(callback);
+            },
+            books_instances(callback) {
+                BookInstance.find({ book: req.params.id }).exec(callback);
+            },
+        },
+        (err, results) => {
+            if (err) { return next(err) }
+
+            if (results.book == null) {
+                res.redirect('/catalog/books');
+            }
+
+            res.render('book_delete', { title: 'Delete Book', book: results.book, book_instances: results.books_instances});
+        }
+    );
 };
 
 exports.book_delete_post = (req, res) => {
-    res.send('NOT IMPLEMENTED: book delete POST');
+    async.parallel(
+        {
+            book(callback) {
+                Book.findById(req.body.bookid).exec(callback);
+            },
+            books_instances(callback) {
+                BookInstance.find({ book: req.body.bookid }).exec(callback);
+            },
+        },
+        (err, results) => {
+            if (err) { return next(err) }
+
+            if (results.books_instances.length > 0) {
+                res.render('book_delete', { title: 'Delete Book'})
+                return;
+            }
+
+            Book.findByIdAndRemove(req.body.bookid, (err) => {
+                if (err) { return next(err) }
+
+                res.redirect('/catalog/books');
+            });
+        }
+    );
 };
 
 exports.book_update_get = (req, res) => {

@@ -90,7 +90,7 @@ exports.author_create_post = [
             first_name: req.body.first_name,
             family_name: req.body.family_name,
             date_of_birth: req.body.date_of_birth,
-            date_of_death: req.boyd.date_of_death,
+            date_of_death: req.body.date_of_death,
         });
 
         author.save((err) => {
@@ -115,7 +115,7 @@ exports.author_delete_get = (req, res) => {
         (err, results) => {
             if (err) { return next(err) }
 
-            if(results.author == null) {
+            if (results.author == null) {
                 res.redirect('/catalog/authors');
             }
 
