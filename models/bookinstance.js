@@ -26,4 +26,8 @@ BookInstanceSchema
     return DateTime.fromJSDate(this.due_back).toLocaleString(DateTime.DATE_MED);
 });
 
+BookInstanceSchema.virtual('due_back_form').get(function() {
+    return DateTime.fromJSDate(this.due_back).toISODate();
+});
+
 module.exports = mongoose.model('BookInstance', BookInstanceSchema);

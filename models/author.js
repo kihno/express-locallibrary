@@ -52,10 +52,10 @@ AuthorSchema
 
 AuthorSchema.virtual('date_of_birth_form').get(function() {
     return DateTime.fromJSDate(this.date_of_birth).toISODate();
-  });
+});
   
-  AuthorSchema.virtual('date_of_death_form').get(function() {
+AuthorSchema.virtual('date_of_death_form').get(function() {
     return DateTime.fromJSDate(this.date_of_death).toISODate();
-  });
+});
 
 module.exports = mongoose.model('Author', AuthorSchema);
