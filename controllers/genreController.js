@@ -84,11 +84,52 @@ exports.genre_create_post = [
 ];
 
 exports.genre_delete_get = (req, res) => {
-    res.send('NOT IMPLMENTED: genre delete GET');
+    async.parallel(
+        {
+            genre(callback) {
+                Genre.findById(req.params.id).exec(callback);
+            },
+            genres_books(callback) {
+                Book.find({ genre: req.params.id }).exec(callback);
+            },
+        },
+        (err, results) => {
+            if (err) { return next(err) }
+
+            if (results.genre == null) {
+                res.redirect('catalog/genres');
+            }
+
+            res.render('genre_delete', { title: 'Delete Genre', genre: results.genre, genre_books: results.genres_books});
+        }
+    );
 };
 
 exports.genre_delete_post = (req, res) => {
-    res.send('NOT IMPLEMENTED: genre delete POST');
+    async.parallel(
+        {
+            genre(callback) {
+                Genre.findById(req.body.genreid).exec(callback);
+            },
+            genres_books(callback) {
+                Book.find({ genre: req.body.genreid }).exec(callback);
+            },
+        },
+        (err, results) => {
+            if (err) { return next(err) }
+
+            if (results.genres_books.length > 0) {
+                res.render('genre_delete', { title: 'Delete Genre', genre: results.genre, genre_books: results.genres_books,});
+                return;
+            }
+
+            Genre.findByIdAndRemove(req.body.genreid, (err) => {
+                if (err) { return next(err) }
+
+                res.redirect('/catalog/genres');
+            });
+        }
+    );
 };
 
 exports.genre_update_get = (req, res) => {
