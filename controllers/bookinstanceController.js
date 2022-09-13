@@ -63,7 +63,7 @@ exports.bookinstance_create_post = [
         const bookinstance = new BookInstance({
             book: req.body.book,
             imprint: req.body.imprint,
-            status: req.body.stats,
+            status: req.body.status,
             due_back: req.body.due_back,
         });
 
